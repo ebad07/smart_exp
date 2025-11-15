@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  password        String
+  incomeMode      String   // regular, irregular, lump_sum, student, household, other
+  profession      String
+  incomeAmount    Float?
+  currency        String   @default("USD")
+  totalLumpSum    Float?
+  lumpSumDuration Int?     // in months
+  monthlyStipend  Float?
+  householdBudget Float?
+  customIncomeDesc String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  expenses        Expense[]
+  incomes         Income[]
+  aiApiKey        String?
+  aiModel         String?
+  
+  @@map("users")
+}
+
+model Expense {
+  id              String   @id @default(cuid())
+  userId          String
+  totalAmount     Float
+  currency        String
+  category        String   // vegetable_marketing, grocery_shopping, online_shopping, lending_borrowing, investments, custom
+  subCategory     String?  // Amazon, eBay, etc. for online shopping
+  customCategory  String?
+  date            DateTime
+  isEssential     Boolean  @default(true)
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  items           ExpenseItem[]
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("expenses")
+}
+
+model ExpenseItem {
+  id          String @id @default(cuid())
+  expenseId   String
+  itemName    String
+  quantity    Float
+  unit        String  // kg, liters, pieces, etc.
+  unitPrice   Float
+  totalPrice  Float
+  isEssential Boolean @default(true)
+  
+  expense     Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  
+  @@map("expense_items")
+}
+
+model Income {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Float
+  currency    String
+  source      String
+  date        DateTime
+  description String?
+  isRecurring Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("incomes")
+}
+
+model LendingBorrowing {
+  id            String   @id @default(cuid())
+  userId        String
+  personName    String
+  amount        Float
+  currency      String
+  type          String   // lending, borrowing
+  date          DateTime
+  description   String?
+  isSettled     Boolean  @default(false)
+  settledDate   DateTime?
+  settledAmount Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("lending_borrowing")
+}
+
+model Investment {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Float
+  currency    String
+  type        String   // stocks, mutual_funds, crypto, real_estate, other
+  description String?
+  date        DateTime
+  returns     Float?
+  isRecurring Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("investments")
+}
