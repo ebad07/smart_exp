@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Home as HomeIcon, TrendingUp, PiggyBank, Users, Target, Sparkles, DollarSign, BookOpen } from 'lucide-react'
+import { Home, TrendingUp, PiggyBank, Users, Target, Sparkles, DollarSign, BookOpen } from 'lucide-react'
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -28,7 +28,7 @@ export default function HomePage() {
               className="relative"
             >
               <div className="w-20 h-20 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
-                <HomeIcon className="w-10 h-10 text-white" />
+                <Home className="w-10 h-10 text-white" />
               </div>
             </motion.div>
           </div>
@@ -200,7 +200,7 @@ export default function HomePage() {
         >
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             {[
-              { icon: HomeIcon, text: "Multi-Currency" },
+              { icon: Home, text: "Multi-Currency" },
               { icon: BookOpen, text: "Detailed Analytics" },
               { icon: Home, text: "Household Management" },
               { icon: TrendingUp, text: "Investment Tracking" }
