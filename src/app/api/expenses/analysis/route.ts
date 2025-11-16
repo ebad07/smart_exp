@@ -113,7 +113,11 @@ export async function GET(request: NextRequest) {
       .sort((a, b) => b.totalAmount - a.totalAmount)
 
     // Suggestions based on spending patterns
-    const suggestions = []
+    const suggestions: Array<{
+      type: 'warning' | 'info' | 'success';
+      message: string;
+      priority: 'high' | 'medium' | 'low';
+    }> = []
     
     // High non-essential spending
     const totalNonEssential = Object.values(categoryAnalysis).reduce((sum: number, data: any) => 
